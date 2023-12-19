@@ -1,0 +1,15 @@
+asgiref==3.7.2
+Django==5.0
+django-appconf==1.0.6
+django-browser-reload==1.12.1
+django-libsass==0.9
+django-livereload-server==0.5
+django-sass-processor==1.4
+django-scss==0.6.1
+libsass==0.22.0
+Pillow==10.1.0
+rcssmin==1.1.1
+rjsmin==1.2.1
+sqlparse==0.4.4
+tornado==6.4
+tzdata==2023.3
