@@ -3,10 +3,11 @@
 {% load sass_tags %}
 
 {% block scss %}
-    {% comment %} <link rel="stylesheet" type="text/css" href="{% sass_src 'auctions/index.scss' %}"> {% endcomment %}
+    {% comment %} <link rel="stylesheet" type="text/css" href="{% sass_src 'mail/index.scss' %}"> {% endcomment %}
 {% endblock %}
 
 {% block body %}
+
     <h2>{{ request.user.email }}</h2>
 
     <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
@@ -38,10 +39,11 @@
 
     <!-- The container for my React components -->
     <div id="react-container"></div>
-
+    
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'mail/inbox.js' %}"></script>
-    <script src="{% static 'react/dist/bundle.js' %}" defer></script>
+<script src="{% static 'react/src/inbox.js' %}"></script>
+
+<script src="{% static 'react/dist/bundle.js' %}"></script>
 {% endblock %}

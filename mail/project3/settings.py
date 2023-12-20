@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'sass_processor',
     'livereload',
     'django_browser_reload',
-    'rest_framework',
     'corsheaders',
 ]
 
