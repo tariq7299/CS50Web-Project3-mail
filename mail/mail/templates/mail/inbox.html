@@ -1,5 +1,10 @@
 {% extends "mail/layout.html" %}
 {% load static %}
+{% load sass_tags %}
+
+{% block scss %}
+    {% comment %} <link rel="stylesheet" type="text/css" href="{% sass_src 'auctions/index.scss' %}"> {% endcomment %}
+{% endblock %}
 
 {% block body %}
     <h2>{{ request.user.email }}</h2>
