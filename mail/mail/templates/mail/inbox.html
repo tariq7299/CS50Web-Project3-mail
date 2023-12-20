@@ -35,8 +35,13 @@
             <input type="submit" class="btn btn-primary"/>
         </form>
     </div>
+
+    <!-- The container for my React components -->
+    <div id="react-container"></div>
+
 {% endblock %}
 
 {% block script %}
     <script src="{% static 'mail/inbox.js' %}"></script>
+    <script src="{% static 'react/dist/bundle.js' %}" defer></script>
 {% endblock %}
