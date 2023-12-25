@@ -42,49 +42,100 @@ function Navbar({setCurrentView}) {
 }
 
 
-function InboxView({children}) {
+function Email({email, setCurrentView, setReplyEmailInfo}){
+  const [isRead, setIsRead] = useState(email.read)
+  const [isArchived, setIsArchived] = useState(email.archived)
+
+  function handleActionButton(e) {
+    if (e.target.name === "read") {
+      fetch(API_BASE_URL+"/emails/"+email.id, {
+        method: 'PUT',
+        body: JSON.stringify({
+          read: !isRead
+        })
+      })
+      setIsRead(!isRead)
+      
+    } else if (e.target.name) {
+      fetch(API_BASE_URL+"/emails/"+email.id, {
+        method: 'PUT',
+        body: JSON.stringify({
+          archived: !isArchived
+        })
+      })
+      setIsArchived(!isArchived)
+    }
+  }
+
+  function handleReplyButton() {
+    setReplyEmailInfo({
+      ...email
+    })
+    setCurrentView("Compose")
+  }
+
+  return (
+    <div className={`email-wrapper ${isRead ? "read" : "unread"}`}>
+      <div className="action-buttons-wrapper">
+        <button name="read" onClick={handleActionButton}>{isRead ? "unread" : "read"}</button>
+        <button name="archived" onClick={handleActionButton}>Archive</button>
+        <button name="reply" onClick={handleReplyButton}>Reply</button>
+      </div>
+      <p>{email.timestamp}</p>
+      <h3>{email.sender}</h3>
+      <h4>{email.subject}</h4>
+      <p>{email.body}</p>
+    </div>
+  )
+}
+
+function InboxView({setCurrentView, setReplyEmailInfo}) {
+  const [isLoading, setIsLoading] = useState(true)
+  const [emails, setEmails] = useState("")
+
+  function emulateLoadingEmails() {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }
+
+  function getEmails() {
+    fetch(`${API_BASE_URL}/emails/inbox`).then(response => response.json()).then(emails => setEmails(emails));
+  }
+
+  useEffect(()=>{
+    getEmails()
+    emulateLoadingEmails()
+  }, [])
+
+  if (isLoading) {
+    return <h1>Loading Emails...</h1>
+  };
+
   return (
     <>
       <h2>Inbox</h2>
-
       <div className="inbox-view-wrapper">
-        <div className="email-wrapper">
-          <h3>Email@sender.com</h3>
-          <h4>Email subject</h4>
-          <p>email body body body body body body</p>
-        </div>
-        <div className="email-wrapper" id="">
-          <h3>Email@sender.com</h3>
-          <h4>Email subject</h4>
-          <p>email body body body body body body</p>
-        </div>
-        <div className="email-wrapper">
-          <h3>Email@sender.com</h3>
-          <h4>Email subject</h4>
-          <p>email body body body body body body</p>
-        </div>
-        <div className="email-wrapper">
-          <h3>Email@sender.com</h3>
-          <h4>Email subject</h4>
-          <p>email body body body body body body</p>
-        </div>
-        <div className="email-wrapper">
-          <h3>Email@sender.com</h3>
-          <h4>Email subject</h4>
-          <p>email body body body body body body</p>
-        </div>
+        {emails.map((email)=>{
+          if (!email.archived) {
+            return <Email key={email.id} email={email} setCurrentView={setCurrentView} setReplyEmailInfo={setReplyEmailInfo}></Email>
+          }
+        })}
+      
       </div>
     </>
   )
 }
 
 
-function ComposeView({setCurrentView}) {
+function ComposeView({setCurrentView, replyEmailInfo}) {
 
   const currentUser = useContext(userContext)
   const [emailInfo, setEmailInfo] = useState({recipients:"", subject:"", body:""})
   const [isSending, setStatus] = useState(false)
   const flashDispatch = useContext(FlashDispatchContext)
+
+  console.log("replayedEmail", replyEmailInfo)
 
   function handleInput(e) {
     setEmailInfo({
@@ -230,6 +281,7 @@ function FlashMessage() {
 function App() {
   const [currentUser, setCurrentUser] = useState("")
   const [currentView, setCurrentView] = useState("Inbox")
+  const [replyEmailInfo, setReplyEmailInfo] = useState("")
 
   
   // When user logs in get the current user info from api (username, email, id)
@@ -249,9 +301,9 @@ function App() {
         <FlashMessage></FlashMessage>
         <Navbar setCurrentView={setCurrentView}></Navbar>
         {currentView === "Inbox" ? (
-          <InboxView></InboxView>
+          <InboxView setCurrentView={setCurrentView} setReplyEmailInfo={setReplyEmailInfo}></InboxView>
         ) : currentView === "Compose" ? (
-          <ComposeView setCurrentView={setCurrentView}></ComposeView>
+          <ComposeView setCurrentView={setCurrentView} replyEmailInfo={replyEmailInfo}></ComposeView>
         ) : currentView === "Archived" ? (
           <ArchivedView></ArchivedView>
         ) : currentView === "Sent" ? (

@@ -36,11 +36,11 @@
       z-index: 2; }
     .inbox-view-wrapper .email-wrapper .action-buttons-wrapper {
       position: absolute;
-      left: 80%;
+      left: 70%;
       top: 10%; }
       .inbox-view-wrapper .email-wrapper .action-buttons-wrapper button {
         border-radius: 10%;
-        margin: 5px; }
+        margin: 0 5px; }
 
 textarea {
   min-height: 300px; }
