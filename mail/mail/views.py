@@ -177,3 +177,9 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "mail/register.html")
+
+
+@login_required
+def get_current_user_info(request):
+    current_user_info = {"userID": request.user.id, "username": request.user.username, "email": request.user.email}
+    return JsonResponse(current_user_info)

@@ -3,12 +3,12 @@
 {% load sass_tags %}
 
 {% block scss %}
-    {% comment %} <link rel="stylesheet" type="text/css" href="{% sass_src 'mail/index.scss' %}"> {% endcomment %}
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'mail/styles.scss' %}">
 {% endblock %}
 
 {% block body %}
 
-    <h2>{{ request.user.email }}</h2>
+    {% comment %} <h2>{{ request.user.email }}</h2>
 
     <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
     <button class="btn btn-sm btn-outline-primary" id="compose">Compose</button>
@@ -35,10 +35,10 @@
             <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
             <input type="submit" class="btn btn-primary"/>
         </form>
-    </div>
+    </div> {% endcomment %}
 
     <!-- The container for my React components -->
-    <div id="react-container"></div>
+    <div id="root"></div>
     
 {% endblock %}
 
