@@ -6,14 +6,10 @@ import { CurrentViewContext, DispatchCurrentViewContext, CurrentViewProvider } f
 
 
 const API_BASE_URL = "http://127.0.0.1:8000"
-document.addEventListener('DOMContentLoaded', function() {
+// My code (using React)
+const root = createRoot(document.getElementById('root'));
 
-  // My code (using React)
-  const root = createRoot(document.getElementById('root'));
-
-  root.render(<App />);
-  
-});
+root.render(<App />);
 
 
 function Button({children}) {
@@ -21,6 +17,7 @@ function Button({children}) {
   const dispatchCurrentView = useContext(DispatchCurrentViewContext)
 
   function handleSetVIew(e) {
+    
     dispatchCurrentView({
       type: "change_view",
       view: e.target.innerText
