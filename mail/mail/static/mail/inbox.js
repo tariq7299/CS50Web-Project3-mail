@@ -132,10 +132,10 @@ function Email({email, setReplyEmailInfo, setEmailView}){
           </button>
         )}
       </div>
-      <p className="email-arrival-time">{email.timestamp}</p>
-      <h3 className="email-sender">{email.sender}</h3>
-      <h4 className="email-subject">{email.subject}</h4>
-      <p className="email-body">{email.body}</p>
+        <p className="email-arrival-time">{email.timestamp}</p>
+        <h3 className="email-sender">{email.sender}</h3>
+        <h4 className="email-subject">{email.subject}</h4>
+        <p className="email-body">{email.body}</p>
     </div>
   )
 }
@@ -400,6 +400,8 @@ function App() {
 }
 
 function EmailView({setReplyEmailInfo, emailView}) {
+  
+
 
   const currentView = useContext(CurrentViewContext)
   const currentUser = useContext(userContext)
@@ -443,24 +445,26 @@ function EmailView({setReplyEmailInfo, emailView}) {
   }
   
   return(
-    <>
-    <ul>
-      <li>Arrived At: {emailView.timestamp} </li>
-      <li>From: {emailView.sender} </li>
-      <li>subject: {emailView.subject} </li>
-      <li>To: {emailView.recipients}</li>
-      <li>
-        Body: 
-        <p>{emailView.body}
-        </p>
-      </li>
+    <div className="email-view-wrapper">
+    <ul className="email-content-wrapper">
+        <li className="email-time">{emailView.timestamp} </li>
+      <div className="email-content-wrapper">
+        <li className="from">From: <span>{emailView.sender}</span></li>
+        <li className="subject">Subject: {emailView.subject} </li>
+        <li className="to">To: {emailView.recipients}</li>
+        <li className="body">
+          <p>{emailView.body}
+          It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+          </p>
+        </li>
+      </div>
     </ul>
     {!(currentUser.email===emailView.sender) && (
     <div className="email-view-action-buttons-wrapper">
-      <button className="btn btn-sm btn-secondary mx-3" name="archived" onClick={handleActionButton}>{isArchived ? "Unarchive" : "Archive"} </button>
-     <button className="btn btn-sm btn-success mx-3" name="reply" onClick={handleReplyButton}>Reply</button>
+     <button className="btn btn-sm btn-success" name="reply" onClick={handleReplyButton}>Reply</button>
+      <button className="btn btn-sm btn-secondary" name="archived" onClick={handleActionButton}>{isArchived ? "Unarchive" : "Archive"} </button>
      </div>
      )}
-  </>
+  </div>
   )
 }

@@ -24,12 +24,12 @@ hide-mailBox {
   display: flex;
   flex-flow: column nowrap;
   width: 100%;
-  padding: 20px;
+  padding: 10px 10px 20px 10px;
   gap: 3px; }
   .inbox-view-wrapper .unread {
     background-color: #c2dbff; }
   .inbox-view-wrapper .email-wrapper {
-    padding: 10px 10px 20px 10px;
+    padding: 20px;
     border: 1px solid #b4b4b4;
     border-radius: 3px;
     overflow: hidden;
@@ -37,7 +37,7 @@ hide-mailBox {
     width: 100%;
     height: 150px;
     z-index: 1; }
-    .inbox-view-wrapper .email-wrapper .email-body {
+    .inbox-view-wrapper .email-wrapper .email-content-wrapper {
       height: 3em;
       overflow: hidden;
       line-height: 1.5rem;
@@ -70,14 +70,12 @@ textarea {
 
 .email-view-wrapper {
   width: 100%;
-  height: 100%;
-  margin: auto; }
+  height: 100%; }
 
 ul.email-content-wrapper {
   width: 100%;
   height: 100%;
-  max-width: 800px;
-  margin: auto; }
+  max-width: 800px; }
   ul.email-content-wrapper li.email-time {
     font-size: small;
     list-style-type: none;
@@ -88,13 +86,13 @@ ul.email-content-wrapper {
     width: 100%;
     height: 100%;
     min-width: 400px;
-    max-width: 800px; }
+    max-width: 600px; }
     ul.email-content-wrapper .email-content-wrapper .from span {
       font-weight: bold; }
     ul.email-content-wrapper .email-content-wrapper .body {
       text-align: left;
       padding: 50px 0;
-      width: 90%;
+      width: 70%;
       margin: auto;
       list-style-type: none; }
 
