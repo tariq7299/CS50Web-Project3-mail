@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client';
 import userContext from "./CurrentUserContext"
 import { FlashContext, FlashDispatchContext, FlashProvider } from './FlashContext';
 
+
+
+
 const API_BASE_URL = "http://127.0.0.1:8000"
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -12,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
   root.render(<App />);
   
 });
+
 
 function Button({children, setCurrentView}) {
   function handleSetVIew(e) {
@@ -116,7 +120,8 @@ function Email({email, setCurrentView, setReplyEmailInfo, currentView, emailView
   )
 }
 
-function InboxView({setCurrentView, setReplyEmailInfo, currentView, emailView, setEmailView}) {
+
+function MailBox({setCurrentView, setReplyEmailInfo, currentView, emailView, setEmailView}) {
   const [isLoading, setIsLoading] = useState(true)
   const [emails, setEmails] = useState("")
 
@@ -126,22 +131,35 @@ function InboxView({setCurrentView, setReplyEmailInfo, currentView, emailView, s
     }, 2000);
   }
 
-  function getEmails() {
+  function getInboxMials() {
     fetch(`${API_BASE_URL}/emails/inbox`).then(response => response.json()).then(emails => setEmails(emails));
   }
-
+  function getSentMails() {
+    fetch(`${API_BASE_URL}/emails/sent`).then(response => response.json()).then(emails => setEmails(emails));
+  }
+  function getArchivedMails() {
+    fetch(`${API_BASE_URL}/emails/inbox`).then(response => response.json()).then(emails => setEmails(emails));
+  }
+  
   useEffect(()=>{
-    getEmails()
+    setIsLoading(true);
+    if (currentView === "Inbox") {
+      getInboxMials()
+    } else if (currentView === "Archived") {
+      getArchivedMails()
+    } else if (currentView === "Sent") {
+      getSentMails()
+    }
     emulateLoadingEmails()
-  }, [])
+  }, [currentView])
 
   if (isLoading) {
     return <h1>Loading Emails...</h1>
-  };
-
+  }
+  
   return (
     <>
-      <h2>Inbox</h2>
+      <h2>{currentView==="Inbox" ? "Inbox" : currentView==="Archived" ? "Archived" : "Sent"}</h2>
       <div className="inbox-view-wrapper">
         {emails.map((email)=>{
           if (!email.archived) {
@@ -295,82 +313,6 @@ function ComposeView({setCurrentView, replyEmailInfo, setReplyEmailInfo}) {
 }
 
 
-function ArchivedView({setCurrentView, setReplyEmailInfo, currentView, emailView, setEmailView}) {
-  const [isLoading, setIsLoading] = useState(true)
-  const [emails, setEmails] = useState("")
-
-  function emulateLoadingEmails() {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }
-
-  function getEmails() {
-    fetch(`${API_BASE_URL}/emails/archive`).then(response => response.json()).then(emails => setEmails(emails));
-  }
-
-  useEffect(()=>{
-    getEmails()
-    emulateLoadingEmails()
-  }, [])
-
-  if (isLoading) {
-    return <h1>Loading Emails...</h1>
-  };
-
-  return (
-    <>
-      <h2>Archived</h2>
-      <div className="inbox-view-wrapper">
-        {emails.map((email)=>{
-            return <Email key={email.id} email={email} setCurrentView={setCurrentView} setReplyEmailInfo={setReplyEmailInfo} currentView={currentView} emailView={emailView} setEmailView={setEmailView}></Email>
-        })}
-      
-      </div>
-    </>
-  )
-}
-
-
-function SentView({setCurrentView, setReplyEmailInfo, currentView, emailView, setEmailView}) {
-  const [isLoading, setIsLoading] = useState(true)
-  const [emails, setEmails] = useState("")
-
-  function emulateLoadingEmails() {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }
-
-  function getEmails() {
-    fetch(`${API_BASE_URL}/emails/sent`).then(response => response.json()).then(emails => setEmails(emails));
-  }
-
-  useEffect(()=>{
-    getEmails()
-    emulateLoadingEmails()
-  }, [])
-
-  if (isLoading) {
-    return <h1>Loading Emails...</h1>
-  };
-
-  return (
-    <>
-      <h2>Sent</h2>
-      <div className="inbox-view-wrapper">
-        {emails.map((email)=>{
-          if (!email.archived) {
-            return <Email key={email.id} email={email} setCurrentView={setCurrentView} setReplyEmailInfo={setReplyEmailInfo} currentView={currentView} emailView={emailView} setEmailView={setEmailView}></Email>
-          }
-        })}
-      
-      </div>
-    </>
-  )
-}
-
-
 function FlashMessage() {
   const flash = useContext(FlashContext)
 
@@ -401,21 +343,21 @@ function App() {
   return (
 
     <FlashProvider>
-      <userContext.Provider value={currentUser}>
-        <FlashMessage></FlashMessage>
-        <Navbar setCurrentView={setCurrentView}></Navbar>
-        {currentView === "Inbox" ? (
-          <InboxView setCurrentView={setCurrentView} setReplyEmailInfo={setReplyEmailInfo} currentView={currentView} emailView={emailView} setEmailView={setEmailView}></InboxView>
-        ) : currentView === "Compose" ? (
-          <ComposeView setCurrentView={setCurrentView} replyEmailInfo={replyEmailInfo} setReplyEmailInfo={setReplyEmailInfo}></ComposeView>
-        ) : currentView === "Archived" ? (
-          <ArchivedView setCurrentView={setCurrentView} currentView={currentView} emailView={emailView} setEmailView={setEmailView}></ArchivedView>
-        ) : currentView === "Sent" ? (
-          <SentView setCurrentView={setCurrentView} currentView={currentView} emailView={emailView} setEmailView={setEmailView}></SentView>
-        ) : currentView === "EmailView" ? (
-          <EmailView currentView={currentView} setCurrentView={setCurrentView} setReplyEmailInfo={setReplyEmailInfo} emailView={emailView}></EmailView>
-        ) : null}
-      </userContext.Provider>
+    <userContext.Provider value={currentUser}>
+
+      <FlashMessage></FlashMessage>
+      <Navbar setCurrentView={setCurrentView}></Navbar>
+
+      {currentView === "Compose" ? (
+        <ComposeView setCurrentView={setCurrentView} replyEmailInfo={replyEmailInfo} setReplyEmailInfo={setReplyEmailInfo}></ComposeView>
+      )
+      :  currentView === "EmailView" ? (
+        <EmailView currentView={currentView} setCurrentView={setCurrentView} setReplyEmailInfo={setReplyEmailInfo} emailView={emailView}></EmailView>
+      ) 
+      : (
+        <MailBox setCurrentView={setCurrentView} setReplyEmailInfo={setReplyEmailInfo} currentView={currentView} emailView={emailView} setEmailView={setEmailView}></MailBox>)}
+
+    </userContext.Provider>
     </FlashProvider>
   );
 }
