@@ -17,18 +17,26 @@ function Button({children}) {
   const dispatchCurrentView = useContext(DispatchCurrentViewContext)
 
   function handleSetVIew(e) {
-    
-    dispatchCurrentView({
-      type: "change_view",
-      view: e.target.innerText
-    })
+    if (e.target.innerText === "Log out"){
+      fetch(API_BASE_URL+"/logout")
+      .then(response=>{
+        if (response.status === 200) {
+
+          window.location.href = '/login';
+        }else {
+          console.log(response.data.message)
+        } 
+      })
+      .catch(error => console.log(error))   
+    } else {
+      dispatchCurrentView({
+        type: "change_view",
+        view: e.target.innerText
+      })
+
+    }
   }
   return <button className="btn btn-sm btn-outline-primary nav-button" onClick={handleSetVIew}>{children}</button>
-}
-
-
-function LogoutButton({children}) {
-  return <button className="btn btn-sm btn-outline-primary">{children}</button>
 }
 
 
@@ -42,7 +50,7 @@ function Navbar({}) {
       <Button>Compose</Button>
       <Button>Sent</Button>
       <Button>Archived</Button>
-      <LogoutButton>Log out</LogoutButton>
+      <Button>Log out</Button>
       <hr></hr>
     </div>
   )
@@ -109,25 +117,25 @@ function Email({email, setReplyEmailInfo, setEmailView}){
       <div className="action-buttons-wrapper">
         {currentView === "Inbox" && (
           <>
-            <button name="read" onClick={handleActionButton}>
+            <button className="btn btn-sm btn-info" name="read" onClick={handleActionButton}>
               {isRead ? "unread" : "read"}
             </button>
-            <button name="archived" onClick={handleActionButton}>
+            <button className="btn btn-sm btn-secondary" name="archived" onClick={handleActionButton}>
               {isArchived ? "Unarchive" : "Archive"}
             </button>
-            <button name="reply" onClick={handleReplyButton}>Reply</button>
+            <button className="btn btn-sm btn-success" name="reply" onClick={handleReplyButton}>Reply</button>
           </>
         )}
         {currentView === "Archived" && (
-          <button name="archived" onClick={handleActionButton}>
+          <button className="btn btn-sm btn-info" name="archived" onClick={handleActionButton}>
             {isArchived ? "Unarchive" : "Archive"}
           </button>
         )}
       </div>
-      <p>{email.timestamp}</p>
-      <h3>{email.sender}</h3>
-      <h4>{email.subject}</h4>
-      <p>{email.body}</p>
+      <p className="email-arrival-time">{email.timestamp}</p>
+      <h3 className="email-sender">{email.sender}</h3>
+      <h4 className="email-subject">{email.subject}</h4>
+      <p className="email-body">{email.body}</p>
     </div>
   )
 }
@@ -448,9 +456,9 @@ function EmailView({setReplyEmailInfo, emailView}) {
       </li>
     </ul>
     {!(currentUser.email===emailView.sender) && (
-    <div className="action-buttons-wrapper">
-      <button name="archived" onClick={handleActionButton}>{isArchived ? "Unarchive" : "Archive"} </button>
-     <button name="reply" onClick={handleReplyButton}>Reply</button>
+    <div className="email-view-action-buttons-wrapper">
+      <button className="btn btn-sm btn-secondary mx-3" name="archived" onClick={handleActionButton}>{isArchived ? "Unarchive" : "Archive"} </button>
+     <button className="btn btn-sm btn-success mx-3" name="reply" onClick={handleReplyButton}>Reply</button>
      </div>
      )}
   </>

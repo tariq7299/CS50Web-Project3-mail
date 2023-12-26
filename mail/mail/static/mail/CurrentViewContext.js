@@ -22,18 +22,6 @@ function CurrentViewReducer(currentView, action) {
     case 'change_view': {
       return action.view
     }
-    // case 'change_view_to_archived': {
-    //   return "Archived"
-    // }
-    // case 'change_view_to_sent': {
-    //   return "Sent"
-    // }
-    // case 'change_view_to_compose': {
-    //   return "Compose"
-    // }
-    // case 'change_view_to_emailView': {
-    //   return "EmailView"
-    // }
     default: {
       throw Error('Unknown action: ' + action.type);
     }
